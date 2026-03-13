@@ -1,0 +1,503 @@
+<style>
+    /* 筛选栏容器 */
+    .region-filter {
+        width: 100%;
+        margin: 20px 0;
+        padding: 0 10px;
+    }
+
+    /* 筛选栏标题 */
+    .filter-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    /* 筛选按钮容器 - 流式布局 */
+    .filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* 按钮间距 */
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    /* 筛选按钮样式 */
+    .region-btn {
+        padding: 8px 18px;
+        background-color: #f5f7fa;
+        border: 1px solid #e5e9f2;
+        border-radius: 6px;
+        color: #333;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap; /* 防止文字换行 */
+        border: none; /* 兼容部分平台默认按钮样式 */
+    }
+
+    /* 选中状态 */
+    .region-btn.active {
+        background-color: #2f54eb;
+        color: #fff;
+    }
+
+    /* 悬停效果 */
+    .region-btn:hover:not(.active) {
+        background-color: #e8f0fe;
+    }
+
+    /* 客户列表容器 */
+    .customer-list {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    /* 客户列表标题 */
+    .customer-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    /* 客户卡片容器 */
+    .customer-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
+
+    /* 客户卡片样式 */
+    .customer-card {
+        padding: 16px;
+        background-color: #fff;
+        border: 1px solid #e5e9f2;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .customer-card:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border-color: #c6d7fb;
+    }
+
+    .customer-name {
+        font-size: 14px;
+        color: #333;
+        line-height: 1.5;
+    }
+
+    /* 省份标签样式 */
+    .province-tag {
+        font-size: 12px;
+        color: #2f54eb;
+        background-color: #e8f0fe;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-right: 8px;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .filter-buttons {
+            gap: 8px;
+        }
+        .region-btn {
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+        .filter-title {
+            font-size: 16px;
+        }
+        .customer-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- 区域筛选栏核心容器 -->
+<div class="region-filter">
+    <div class="filter-title">按省份筛选合作案例</div>
+    <div class="filter-buttons">
+        <button class="region-btn active" data-region="all">全部</button>
+        <!-- 华东地区 -->
+        <button class="region-btn" data-region="anhui">安徽省</button>
+        <button class="region-btn" data-region="fujian">福建省</button>
+        <button class="region-btn" data-region="jiangsu">江苏省</button>
+        <button class="region-btn" data-region="jiangxi">江西省</button>
+        <button class="region-btn" data-region="shandong">山东省</button>
+        <button class="region-btn" data-region="shanghai">上海市</button>
+        <button class="region-btn" data-region="zhejiang">浙江省</button>
+        <!-- 华南地区 -->
+        <button class="region-btn" data-region="guangdong">广东省</button>
+        <button class="region-btn" data-region="guangxi">广西壮族自治区</button>
+        <button class="region-btn" data-region="hainan">海南省</button>
+        <!-- 华北地区 -->
+        <button class="region-btn" data-region="beijing">北京市</button>
+        <button class="region-btn" data-region="hebei">河北省</button>
+        <button class="region-btn" data-region="neimenggu">内蒙古自治区</button>
+        <button class="region-btn" data-region="shanxi">山西省</button>
+        <!-- 西南地区 -->
+        <button class="region-btn" data-region="chongqing">重庆市</button>
+        <button class="region-btn" data-region="guizhou">贵州省</button>
+        <button class="region-btn" data-region="sichuan">四川省</button>
+        <button class="region-btn" data-region="xizang">西藏自治区</button>
+        <button class="region-btn" data-region="yunnan">云南省</button>
+        <!-- 西北地区 -->
+        <button class="region-btn" data-region="gansu">甘肃省</button>
+        <button class="region-btn" data-region="ningxia">宁夏回族自治区</button>
+        <button class="region-btn" data-region="qinghai">青海省</button>
+        <button class="region-btn" data-region="shanxi_xi">陕西省</button>
+        <button class="region-btn" data-region="xinjiang">新疆维吾尔自治区</button>
+        <!-- 东北地区 -->
+        <button class="region-btn" data-region="heilongjiang">黑龙江省</button>
+        <button class="region-btn" data-region="jilin">吉林省</button>
+        <button class="region-btn" data-region="liaoning">辽宁省</button>
+        <!-- 华中地区 -->
+        <button class="region-btn" data-region="henan">河南省</button>
+        <button class="region-btn" data-region="hubei">湖北省</button>
+        <button class="region-btn" data-region="hunan">湖南省</button>
+        <!-- 海外 -->
+        <button class="region-btn" data-region="overseas">海外</button>
+    </div>
+</div>
+
+<!-- 客户列表展示区域 -->
+<div class="customer-list">
+    <div class="customer-title">合作机构列表</div>
+    <div class="customer-cards" id="customerContainer">
+        <!-- 客户卡片会通过JS动态生成 -->
+    </div>
+</div>
+
+<script>
+    // 按省份分类的所有机构数据
+    const customerData = {
+        all: [], // 自动汇总所有省份数据
+        // 华东地区
+        anhui: [
+            "安徽省蚌埠市第二人民医院",
+            "安徽省池州市第二人民医院",
+            "安徽省阜阳市人民医院",
+            "安徽省临泉中医院",
+            "安徽省凤台人民医院",
+            "安徽省青阳县人民医院",
+            "安徽省芜湖妇幼保健院",
+            "安徽省芜湖县人民医院",
+            "安徽省五河县人民医院"
+        ],
+        fujian: [
+            "福建省莆田市城厢区医院",
+            "福建省泉州儿童医院",
+            "福建省闽西职业技术学院"
+        ],
+        jiangsu: [
+            "江苏省常州第四人民医院",
+            "江苏省丹阳市第二人民医院",
+            "江苏省丰县第二医院",
+            "江苏省江阴人民医院",
+            "江苏省金坛市人民医院",
+            "江苏省溧阳市人民医院",
+            "江苏省连云港眼科医院",
+            "江苏省涟水妇幼保健院",
+            "江苏省南京中医药大学医学院",
+            "江苏省南通航运职业技术学院",
+            "江苏省如皋人民医院",
+            "江苏省射阳新城区人民医院",
+            "江苏省妇幼保健院",
+            "江苏省连云港中医院",
+            "江苏省南通卫生高等职业技术学校",
+            "江苏省宿迁市中心医院",
+            "江苏省肿瘤医院",
+            "江苏省苏州卫生职业技术学院",
+            "江苏省泰州职业技术学院",
+            "江苏省无锡锡山人民医院",
+            "江苏省无锡怡和医院",
+            "江苏省响水县人民医院新院区",
+            "江苏省新沂市人民医院",
+            "江苏省徐州市传染病医院",
+            "江苏省徐州市第一人民医院",
+            "江苏省徐州市中心医院儿童诊疗中心",
+            "江苏省扬州市第一人民医院"
+        ],
+        jiangxi: [
+            "江西省抚州市第一人民医院",
+            "江西省湖口县人民医院",
+            "江西省嘉佑健康城医院",
+            "江西省九江妇幼保健院",
+            "江西省九江医学院附属医院",
+            "江西省铅山县人民医院"
+        ],
+        shandong: [
+            "山东省山东大学齐鲁医院日照分院",
+            "山东省冠县妇幼医院",
+            "山东省济南第三人民医院",
+            "山东省济宁市人民医院",
+            "山东省莒南县人民医院",
+            "山东省临沂妇幼保健院",
+            "山东省济宁中医院",
+            "山东省淄博市妇幼保健院",
+            "山东省寿光中医院",
+            "山东省树兰(济南)国际医院",
+            "山东省泰安妇幼保健院",
+            "山东省泰安市立医院",
+            "山东省烟台爱视眼科医院",
+            "山东省沂南县人民医院",
+            "山东省淄博世博新区医院"
+        ],
+        shanghai: [
+            "上海市东部战区海军医院",
+            "上海市复旦大学附属中山医院",
+            "上海市德济医院",
+            "上海市第九人民医院",
+            "上海市儿童医院",
+            "上海市沪东医院",
+            "上海市虹口北部公卫中心",
+            "上海市金山医院二期",
+            "上海市精神卫生中心",
+            "上海市瑞金医院消化大楼",
+            "上海市胸科医院",
+            "上海市万科儿童医院",
+            "上海市杨思医院",
+            "上海市医大医院"
+        ],
+        zhejiang: [
+            "浙江省安吉中医院",
+            "浙江省杭州滨江医院",
+            "浙江省杭州江干区人民医院",
+            "浙江省杭州师范大学附属医院",
+            "浙江省湖州双林医院",
+            "浙江省湖州浙北明州医院",
+            "浙江省湖州中医院",
+            "浙江省宁波第九人民医院",
+            "浙江省宁波二院",
+            "浙江省老年医疗中心",
+            "浙江省余姚市人民医院",
+            "浙江省浙江长泰医院",
+            "浙江省台州博爱医院",
+            "浙江省浙北医学中心",
+            "浙江省舟山413医院",
+            "浙江省浙医二院国际医学中心"
+        ],
+        // 华南地区
+        guangdong: [
+            "广东省东莞市第五人民医院",
+            "广东省惠州市仲恺区人民医院",
+            "广东省江门市中心医院",
+            "广东省中西医结合学会鞍山人民医院",
+            "广东省珠海人民医院",
+            "广东省东莞市长安医院",
+            "广东省番禺区中医院",
+            "广东省深圳宝安妇幼保健院",
+            "广东省深圳中国科学院大学深圳医院",
+            "广东省中科大深圳医院"
+        ],
+        guangxi: [
+            "广西壮族自治区国壮医院",
+            "广西壮族自治区中医药大学附属医院"
+        ],
+        hainan: [
+            "海南省三亚鸿森医院",
+            "海南省三亚育才医院"
+        ],
+        // 华北地区
+        beijing: [
+            "北京市北大康复医院",
+            "北京市劳动保障职业学院",
+            "北京市农学院",
+            "北京市首都机场医院"
+        ],
+        hebei: [
+            "河北省廊坊广阳区医院",
+            "河北省保定妇幼保健院",
+            "河北省阳原县中医院"
+        ],
+        neimenggu: [
+            "内蒙古自治区妇幼保健院",
+            "内蒙古自治区乌海市人民医院",
+            "内蒙古自治区准格尔旗人民医院"
+        ],
+        shanxi: [
+            "山西省985医院",
+            "山西省白求恩医院",
+            "山西省闻喜县人民医院",
+            "山西省第二人民医院"
+        ],
+        // 西南地区
+        chongqing: [
+            "重庆市护士学校"
+        ],
+        guizhou: [
+            "贵州省第三人民医院",
+            "贵州省清镇市中医院",
+            "贵州省遵义市妇幼保健院",
+            "贵州省遵义市口腔医院",
+            "贵州省遵义市中医院",
+            "贵州省铜仁市人民医院"
+        ],
+        sichuan: [
+            "四川省广元市中心医院",
+            "四川省成都铁路卫校",
+            "四川省口腔医院",
+            "四川省盐源县人民医院",
+            "四川省宜宾同济医院"
+        ],
+        xizang: [
+            "西藏自治区医院"
+        ],
+        yunnan: [
+            "云南省保山市人民医院",
+            "云南省大理州儿童医院",
+            "云南省昆明第一人民医院",
+            "云南省怒江州人民医院",
+            "云南省瑞丽景成医院",
+            "云南省昆明市第三人民医院"
+        ],
+        // 西北地区
+        gansu: [
+            "甘肃省金昌市人民医院",
+            "甘肃省兰州大学第二附属医院",
+            "甘肃省临夏州人民医院",
+            "甘肃省庆阳妇幼保健院"
+        ],
+        ningxia: [
+            "宁夏回族自治区儿童医院",
+            "宁夏回族自治区民族职业技术学院"
+        ],
+        qinghai: [
+            "青海省贵德县人民医院"
+        ],
+        shanxi_xi: [
+            "陕西省靖边县中医院",
+            "陕西省人民医院临床医院",
+            "陕西省铜川市人民医院",
+            "陕西省西安交大二附院"
+        ],
+        xinjiang: [
+            "新疆维吾尔自治区阿勒泰地区人民医院",
+            "新疆维吾尔自治区喀什地区卫生学校",
+            "新疆维吾尔自治区吐鲁番人民医院",
+            "新疆维吾尔自治区昌吉州人民医院",
+            "新疆维吾尔自治区喀什二院"
+        ],
+        // 东北地区
+        heilongjiang: [
+            "黑龙江省哈尔滨医科大学第四医院",
+            "黑龙江省黑河市第一人民医院",
+            "黑龙江省铁力市人民医院"
+        ],
+        jilin: [
+            "吉林省珲春中医院",
+            "吉林省吉林大学第二医院"
+        ],
+        liaoning: [
+            "辽宁省锦州医科大学一附院"
+        ],
+        // 华中地区
+        henan: [
+            "河南省安阳市妇幼保健院",
+            "河南省科技大学第一附属医院",
+            "河南省卢氏县新中医院",
+            "河南省三门峡市新型冠状病毒收治医院",
+            "河南省豫东骨伤医院",
+            "河南省郑州大学第三附属医院",
+            "河南省郑州市骨科医院",
+            "河南省郑州宜居健康城医院",
+            "河南省中医学院第一附属医院"
+        ],
+        hubei: [
+            "湖北省荆门市第一人民医院",
+            "湖北省宜昌市人民医院",
+            "湖北省宜昌市中心医院",
+            "湖北省武汉雷神山医院",
+            "湖北省仙桃市人民医院"
+        ],
+        hunan: [
+            "湖南省桃江人民医院",
+            "湖南省中南大学湘雅二医院"
+        ],
+        // 海外
+        overseas: [
+            "老挝玛霍索综合医院"
+        ]
+    };
+
+    // 自动汇总所有省份数据到all分类
+    customerData.all = Object.keys(customerData)
+        .filter(key => key !== 'all')
+        .flatMap(key => customerData[key]);
+
+    // 获取DOM元素
+    const regionButtons = document.querySelectorAll('.region-btn');
+    const customerContainer = document.getElementById('customerContainer');
+
+    // 初始化：显示全部机构
+    renderCustomers('all');
+
+    // 为每个区域按钮添加点击事件
+    regionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 移除所有按钮的active类
+            regionButtons.forEach(b => b.classList.remove('active'));
+            // 为当前点击的按钮添加active类
+            btn.classList.add('active');
+            
+            // 获取选中的区域值
+            const selectedRegion = btn.getAttribute('data-region');
+            
+            // 渲染对应区域的机构列表
+            renderCustomers(selectedRegion);
+        });
+    });
+
+    // 渲染机构列表函数
+    function renderCustomers(region) {
+        // 清空容器
+        customerContainer.innerHTML = '';
+        
+        // 获取对应区域的机构列表
+        const institutions = customerData[region];
+        
+        // 如果没有机构，显示提示
+        if (!institutions || institutions.length === 0) {
+            customerContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #999;">暂无该地区的合作机构</div>';
+            return;
+        }
+        
+        // 遍历生成机构卡片
+        institutions.forEach(institution => {
+            const card = document.createElement('div');
+            card.className = 'customer-card';
+            
+            // 提取省份名称作为标签
+            let provinceTag = '';
+            const provinceMap = {
+                '安徽省': '安徽省', '福建省': '福建省', '江苏省': '江苏省',
+                '江西省': '江西省', '山东省': '山东省', '上海市': '上海市',
+                '浙江省': '浙江省', '广东省': '广东省', '广西壮族自治区': '广西',
+                '海南省': '海南省', '北京市': '北京市', '河北省': '河北省',
+                '内蒙古自治区': '内蒙古', '山西省': '山西省', '重庆市': '重庆市',
+                '贵州省': '贵州省', '四川省': '四川省', '西藏自治区': '西藏',
+                '云南省': '云南省', '甘肃省': '甘肃省', '宁夏回族自治区': '宁夏',
+                '青海省': '青海省', '陕西省': '陕西省', '新疆维吾尔自治区': '新疆',
+                '黑龙江省': '黑龙江', '吉林省': '吉林省', '辽宁省': '辽宁省',
+                '河南省': '河南省', '湖北省': '湖北省', '湖南省': '湖南省',
+                '老挝': '海外'
+            };
+            
+            // 匹配省份标签
+            for (const [key, value] of Object.entries(provinceMap)) {
+                if (institution.startsWith(key)) {
+                    provinceTag = `<span class="province-tag">${value}</span>`;
+                    break;
+                }
+            }
+            
+            card.innerHTML = `<div class="customer-name">${provinceTag}${institution}</div>`;
+            customerContainer.appendChild(card);
+        });
+    }
+</script>
